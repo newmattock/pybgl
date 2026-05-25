@@ -107,6 +107,7 @@ class build_clib(_build_clib):
 class build_ext(_build_ext):
     def run(self):
         if self.distribution.has_c_libraries():
+            self.run_command("build_clib")
             build_clib = self.get_finalized_command("build_clib")
             self.include_dirs.append(
                 os.path.join(build_clib.build_clib, "include"),
@@ -180,6 +181,5 @@ setup(name='pybgl',
       packages=find_packages(exclude=('libsecp256k1')),
       test_suite='tests',
       zip_safe=False)
-
 
 
