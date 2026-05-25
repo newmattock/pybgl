@@ -269,9 +269,11 @@ def is_address_valid(address, testnet=False):
         if sha3_256(h[:-4])[:4] != checksum:
             return False
         return True
-    elif (address[:3] == MAINNET_SEGWIT_ADDRESS_PREFIX) \
-             or (address[:4] == TESTNET_SEGWIT_ADDRESS_PREFIX):
+    elif (address.lower()[:3] == MAINNET_SEGWIT_ADDRESS_PREFIX) \
+             or (address.lower()[:4] == TESTNET_SEGWIT_ADDRESS_PREFIX):
         if len(address) not in (43, 63):
+            return False
+        if address != address.lower() and address != address.upper():
             return False
         try:
             prefix, payload = address.split('1')
@@ -280,7 +282,7 @@ def is_address_valid(address, testnet=False):
         upp = True if prefix[0].isupper() else False
         for i in payload[1:]:
             if upp:
-                if not i.isupper() or i not in base32charset_upcase:
+                if i not in base32charset_upcase:
                     return False
             else:
                 if i.isupper() or i not in base32charset:
